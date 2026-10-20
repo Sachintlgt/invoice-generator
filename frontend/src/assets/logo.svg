@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Modern Geometric Folded Triangle (Delta) Logo -->
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E40AF" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Segment -->
+  <path d="M40 160 L95 45 C98 39 106 39 109 45 L135 95 L80 160 Z" fill="url(#grad2)" />
+  <!-- Right Segment -->
+  <path d="M100 35 C104 35 108 38 111 43 L175 150 C178 156 174 163 167 163 L115 163 L75 95 Z" fill="url(#grad1)" />
+  <!-- Bottom Base Segment -->
+  <path d="M30 160 C25 160 22 154 25 149 L55 95 L115 160 Z" fill="url(#grad3)" />
+</svg>
