@@ -1,7 +1,11 @@
 import axios, { AxiosError } from 'axios';
 import type { Invoice, InvoiceListItem } from '../types/invoice';
 
-const baseURL = import.meta.env.VITE_API_URL || '/api';
+const rawBaseURL = (import.meta.env.VITE_API_URL as string | undefined) || '';
+const cleanBaseURL = rawBaseURL.trim().replace(/\/+$/, '');
+const baseURL = cleanBaseURL.endsWith('/api')
+  ? cleanBaseURL.slice(0, -4)
+  : cleanBaseURL;
 
 export const apiClient = axios.create({
   baseURL,
@@ -29,32 +33,37 @@ export function getErrorMessage(err: unknown): string {
   return 'An unexpected error occurred. Please try again.';
 }
 
+export async function checkHealth(): Promise<{ status: string; service: string; version: string }> {
+  const response = await apiClient.get<{ status: string; service: string; version: string }>('/api/health');
+  return response.data;
+}
+
 export async function fetchInvoices(search?: string, status?: string): Promise<InvoiceListItem[]> {
   const params: Record<string, string> = {};
   if (search && search.trim()) params.search = search.trim();
   if (status && status.trim() && status !== 'All') params.status = status.trim();
 
-  const response = await apiClient.get<InvoiceListItem[]>('/invoices', { params });
+  const response = await apiClient.get<InvoiceListItem[]>('/api/invoices', { params });
   return response.data;
 }
 
 export async function fetchInvoice(id: string): Promise<Invoice> {
-  const response = await apiClient.get<Invoice>(`/invoices/${id}`);
+  const response = await apiClient.get<Invoice>(`/api/invoices/${id}`);
   return response.data;
 }
 
 export async function createInvoice(invoice: Partial<Invoice>): Promise<Invoice> {
-  const response = await apiClient.post<Invoice>('/invoices', invoice);
+  const response = await apiClient.post<Invoice>('/api/invoices', invoice);
   return response.data;
 }
 
 export async function updateInvoice(id: string, invoice: Partial<Invoice>): Promise<Invoice> {
-  const response = await apiClient.put<Invoice>(`/invoices/${id}`, invoice);
+  const response = await apiClient.put<Invoice>(`/api/invoices/${id}`, invoice);
   return response.data;
 }
 
 export async function deleteInvoice(id: string): Promise<{ success: boolean; message: string }> {
-  const response = await apiClient.delete<{ success: boolean; message: string }>(`/invoices/${id}`);
+  const response = await apiClient.delete<{ success: boolean; message: string }>(`/api/invoices/${id}`);
   return response.data;
 }
 
@@ -63,7 +72,7 @@ export async function sendInvoiceEmail(
   payload?: { recipient_email?: string; subject?: string; message?: string }
 ): Promise<{ success: boolean; message: string; recipient_email: string }> {
   const response = await apiClient.post<{ success: boolean; message: string; recipient_email: string }>(
-    `/invoices/${id}/send`,
+    `/api/invoices/${id}/send`,
     payload || {}
   );
   return response.data;
